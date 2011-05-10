@@ -1,0 +1,5 @@
+*.[568]
+[568].out
+_obj
+_test*
+doozer-bench
