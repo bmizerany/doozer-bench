@@ -15,7 +15,7 @@ var (
 	a = flag.String("a", "", "The doozer cluster to bind to")
 )
 
-type cb func(id, iter int, start, end int64, err os.Error)
+type cb func(id, iter int, rev, start, end int64, err os.Error)
 
 func main() {
 	flag.Parse()
@@ -27,12 +27,12 @@ func main() {
 	opc := *n / *c
 	done := make(chan bool)
 
-	f := func(id, iter int, start, end int64, err os.Error) {
+	f := func(id, iter int, rev, start, end int64, err os.Error) {
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "err: %s\n", err.String())
 			fmt.Println(id, -1)
 		} else {
-			fmt.Println(time.Nanoseconds(), id, iter, end - start)
+			fmt.Println(time.Nanoseconds(), id, iter, rev, end - start)
 		}
 
 		if iter == (opc - 1) {
@@ -56,8 +56,8 @@ func main() {
 func set(cl *doozer.Conn, id, iter int, path string, value []byte, f cb) {
 	for i := 0; i < iter; i++ {
 		s := time.Nanoseconds()
-		_, err := cl.Set(path, math.MaxInt64, value)
+		rev, err := cl.Set(path, math.MaxInt64, value)
 		e := time.Nanoseconds()
-		f(id, i, s, e, err)
+		f(id, i, rev, s, e, err)
 	}
 }
