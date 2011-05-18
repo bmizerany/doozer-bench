@@ -1,0 +1,14 @@
+#!/bin/sh
+
+n=3
+
+DOOZER_URI="doozer:?ca=127.0.0.1:804$n"
+
+while [ $n -ne 1 ]
+do
+    n=$(expr $n - 1)
+    DOOZER_URI="$DOOZER_URI&ca=127.0.0.1:804$n"
+done
+
+export DOOZER_URI
+exec doozer-bench "$@"
