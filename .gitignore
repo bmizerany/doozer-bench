@@ -2,4 +2,6 @@
 [568].out
 _obj
 _test*
-doozer-bench
+cmd/doozer-bench/doozer-bench
+cmd/doozer-report/doozer-report
+*.txt
