@@ -14,6 +14,20 @@ import (
 
 var Delim = []byte{' '}
 
+type Int64Array []int64
+
+func (a Int64Array) Len() int {
+	return len(a)
+}
+
+func (a Int64Array) Less(i, j int) bool {
+	return a[i] < a[j]
+}
+
+func (a Int64Array) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
 
 func main() {
 	if flag.NArg() < 1 {
@@ -28,8 +42,8 @@ func main() {
 	}
 	defer f.Close()
 
-	ts := make([]int, 0)
 	ln := 0
+	ts := Int64Array(make([]int64, 0))
 	r := line.NewReader(f, math.MaxInt8)
 	for {
 		ln += 1
@@ -47,7 +61,7 @@ func main() {
 			continue
 		}
 
-		ns, err := strconv.Atoi(string(fds[4]))
+		ns, err := strconv.Atoi64(string(fds[4]))
 		if err != nil {
 			// TODO: be more gracefull
 			panic(err)
@@ -56,7 +70,7 @@ func main() {
 		ts = append(ts, ns)
 	}
 
-	sort.SortInts(ts)
+	sort.Sort(ts)
 
 	n := float64(len(ts))
 	ftp := int((n * 50 / 100)+0.5)
