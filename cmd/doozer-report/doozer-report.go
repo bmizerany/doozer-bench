@@ -29,8 +29,10 @@ func main() {
 	defer f.Close()
 
 	ts := make([]int, 0)
+	ln := 0
 	r := line.NewReader(f, math.MaxInt8)
 	for {
+		ln += 1
 		line, _, err := r.ReadLine()
 		if err == os.EOF {
 			break
@@ -41,7 +43,8 @@ func main() {
 		fds := bytes.Split(line, Delim, -1)
 
 		if len(fds) < 5 {
-			panic("invalid file format")
+			fmt.Printf("invalid line (%d): %s\n", ln, line)
+			continue
 		}
 
 		ns, err := strconv.Atoi(string(fds[4]))
