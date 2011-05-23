@@ -57,14 +57,15 @@ func main() {
 		fds := bytes.Split(line, Delim, -1)
 
 		if len(fds) < 5 {
-			fmt.Printf("invalid line (%d): %s\n", ln, line)
+			fmt.Fprintf(os.Stderr, "%s:%d:invalid record: %s\n", fn, ln, line)
 			continue
 		}
 
 		ns, err := strconv.Atoi64(string(fds[4]))
 		if err != nil {
 			// TODO: be more gracefull
-			panic(err)
+			fmt.Fprintf(os.Stderr, "%s:%d: %s\n", fn, ln, err.String())
+			continue
 		}
 
 		ts = append(ts, ns)
